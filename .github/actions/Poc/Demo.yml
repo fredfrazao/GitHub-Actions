@@ -1,0 +1,57 @@
+--- 
+ name: "az storage" 
+ description: "az storage " 
+ inputs: 
+   BLOB_CONTAINER_URL: 
+     description: "BLOB_CONTAINER_URL" 
+     required: true 
+   AZURE_STORAGE_DESTINATION_FOLDER: 
+     description: "AZURE_STORAGE_DESTINATION_FOLDER" 
+     required: true 
+   source: 
+     description: "source" 
+     required: true 
+   azure-credentials : 
+     description: "azure-credentials" 
+     required: true 
+   upload_enabled : 
+     description: "upload enabled" 
+     required: true 
+   auth_mod : 
+     description: "auth_mod" 
+     required: false 
+     default: login 
+   az_function : 
+     description: "az function" 
+     required: false 
+     default: blob 
+   az_sub_function : 
+     description: "az az sub function" 
+     required: false 
+     default: upload-batch 
+  
+  
+ runs: 
+   using: "composite" 
+   steps: 
+     - name: Install azure-cli 
+       uses: elstudio/action-install-azure-cli@v1 
+  
+     - name: Login via Azure CLI 
+       uses: azure/login@v1.4.6 
+       with: 
+         creds: ${{ inputs.azure-credentials }} 
+  
+     - name: Upload to Storage account 
+       if: github.event.inputs.upload_enabled == 'true' 
+       shell: bash 
+       env: 
+         BLOB_CONTAINER_URL:  ${{ inputs.BLOB_CONTAINER_URL }} 
+         AZURE_STORAGE_DESTINATION_FOLDER: ${{ inputs.AZURE_STORAGE_DESTINATION_FOLDER }} 
+       run: | 
+         az storage ${{ inputs.az_function }}  ${{ inputs.az_sub_function }}  \ 
+         --auth-mode ${{ inputs.auth_mod }} \ 
+         --source ${{ inputs.source }} \ 
+         --destination ${{ inputs.BLOB_CONTAINER_URL }} \ 
+         --destination-path ${{ inputs.AZURE_STORAGE_DESTINATION_FOLDER }} \ 
+         --overwrite true
