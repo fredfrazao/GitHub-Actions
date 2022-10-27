@@ -1,0 +1,32 @@
+name: debug1
+"on": workflow_dispatch
+jobs:
+  issue_245:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: debug
+      - run: npm ci
+      - run: npm run build
+      - uses: ./
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          title: Debug
+          body: "debugging #245"
+          branch: debug-issue-245
+          path: test.txt
+          commit-message: debug
+
+      - name: Create Pull Request
+        uses: fredfrazao/GitHub-Actions/actions/create-or-update-pull-request-action
+        id: pr
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          title: "title"
+          body: "[body"
+          branch: "ff_test"
+          path: "/"
+          commit-message: "test commit msg"

@@ -1,0 +1,36 @@
+---
+name: "Generate Azure credentials JSON & login"
+description: "Generate Azure credentials JSON & login "
+inputs:
+  ARM_CLIENT_ID:
+    description: "ARM client id"
+    required: true
+  ARM_CLIENT_SECRET:
+    description: "ARM client secret"
+    required: true
+  ARM_SUBSCRIPTION_ID:
+    description: "ARM subscription id "
+    required: true
+  ARM_TENANT_ID:
+    description: "ARM tenant id"
+    required: true
+
+
+runs:
+  using: "composite"
+  steps:
+    - name: Generate Azure credentials JSON
+      shell: bash
+      run: |
+        JSON=$(jq -n -c \
+        --arg clientId "${{ inputs.ARM_CLIENT_ID }}" \
+        --arg clientSecret "${{ inputs.ARM_CLIENT_SECRET }}" \
+        --arg subscriptionId "${{ inputs.ARM_SUBSCRIPTION_ID }}" \
+        --arg tenantId "${{ inputs.ARM_TENANT_ID }}" \
+        '$ARGS.named')
+        echo AZ_CREDENTIALS=$JSON >> $GITHUB_ENV
+
+    - name: Login via Azure CLI
+      uses: azure/login@v1.4.6
+      with:
+        creds: ${{ env.AZ_CREDENTIALS }}
