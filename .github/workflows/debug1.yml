@@ -10,17 +10,8 @@ jobs:
       - run: npm ci
       - run: npm run build
       - uses: ./
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          title: Debug
-          body: "debugging #245"
-          branch: debug-issue-245
-          path: test.txt
-          commit-message: debug
-
       - name: Create Pull Request
-        uses: fredfrazao/GitHub-Actions/actions/create-or-update-pull-request-action
+        uses: fredfrazao/GitHub-Actions/actions/create-or-update-pull-request-action@master
         id: pr
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
