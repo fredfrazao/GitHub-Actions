@@ -12,7 +12,7 @@ jobs:
       - run: npm run build
       - uses: ./
       - name: Create Pull Request
-        uses: fredfrazao/GitHub-Actions/actions/create-or-update-pull-request-action@master
+        uses: fredfrazao/GitHub-Actions/actions/create-or-update-pull-request-action@v1.0.0
         id: pr
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
