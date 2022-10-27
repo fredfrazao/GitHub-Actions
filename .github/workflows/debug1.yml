@@ -6,11 +6,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-        with:
-          ref: debug
-      - run: npm ci
-      - run: npm run build
-      - uses: ./
       - name: Create Pull Request
         uses: fredfrazao/GitHub-Actions/actions/create-or-update-pull-request-action@v1.0.0
         id: pr
